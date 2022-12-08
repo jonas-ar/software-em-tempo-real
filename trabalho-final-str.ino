@@ -117,6 +117,8 @@ void loop()
 
 void task_sensor( void *pvParameters )
 {
+    TickType_t momentoDoInicio;
+    momentoDoInicio = xTaskGetTickCount();
     (void) pvParameters;
     int adc_read=0;
     UBaseType_t uxHighWaterMark;
@@ -132,7 +134,7 @@ void task_sensor( void *pvParameters )
         xQueueOverwrite(xQueue_LED, (void *)&voltage);
         
         /* Espera um segundo */
-        vTaskDelay( 1000 / portTICK_PERIOD_MS ); 
+        vTaskDelayUntil( &momentoDoInicio, pdMS_TO_TICKS(1000) ); // executa em intervalos precisos
 
         /* Para fins de teste de ocupação de stack, printa na serial o high water mark */
         xSemaphoreTake(xSerial_semaphore, portMAX_DELAY );
